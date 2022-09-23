@@ -1,0 +1,66 @@
+############################################
+# CMPS4232 - Quiz #1
+# Federico Rosado
+###########################################
+
+#!/bin/bash
+
+#User must provide two arguments to run script
+root_directory="$1"
+identifier="$2"
+
+
+#Checks if arguments exist
+if [[ -z $1  ]] || [[ -z $2 ]]; then
+	echo "You need to provide 2 arguments for this script to work"
+	echo "Usage: <root directory name> <indetifier name>"
+	exit 1
+else 
+	echo "I am about to create a directory structure named $root_directory"
+	
+
+	#read user input
+	read -p "Do you wan to proceed? (yes/no)" yn
+
+	case $yn in
+			#Yes option to create Directory structure
+			yes ) echo "Creating Directory Structure";
+					#Create root Directory
+					mkdir -p "$root_directory";
+					
+					#cd in root directory
+					cd "$root_directory";
+
+					#creating other directory and files inside root directory
+					mkdir -p bin cmd/api internals migrations remote;
+					touch cmd/api/main.go;
+					touch Makefile;
+					go mod init "$root_directory.$identifier";
+					go mod tidy;
+					
+					#creating content for main.go
+					echo "
+					// File: cmd/api/main.go
+
+					package main
+					import "\"fmt"\"
+					func main() {
+
+					fmt.Println("\"Hello world!"\")
+
+					}">>cmd/api/main.go;
+					
+					#Successful
+					echo "I have created a *main.go* file for you to test the directory structure";
+					echo "Type *go run ./cmd/api* at the root directory of your project to test your project";
+					echo "THANK YOU";;
+			#No option QUIT script
+			no ) echo "Abort...";
+				exit;;
+			#Invalid option and Quit
+			* ) echo "invalid response"
+				exit;;
+	esac
+fi
+
+
